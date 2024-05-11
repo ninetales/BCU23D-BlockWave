@@ -1,40 +1,30 @@
 import fs from 'fs';
+import { writeFile, readFile, appendFile } from 'fs/promises';
 import path from 'path';
-// import { __appdir } from '../global.mjs';
 
-export class FileHandler {
-
-    constructor(folderName, fileName) {
-        this.filePath = path.join(__appdir, folderName, fileName);
-    }
-
-    writeToFile(block) {
-        console.log('WRITING TO FILE!');
-        try {
-            if (fs.existsSync(this.filePath)) {
-                const chain = JSON.parse(fs.readFileSync(this.filePath));
-                console.log('FILE UPDATED');
-            } else {
-                // Create file
-                fs.appendFileSync(this.filePath, `[${block}]`);
-                console.log('FILE CREATED!');
-            }
-        } catch (error) {
+export const writeToFile = async (folderName, fileName, data) => {
+    const filePath = path.join(__appdir, folderName, fileName);
+    let chain;
+    try {
+        const chainData = await readFile(filePath, 'utf-8');
+        chain = JSON.parse(chainData);
+        const temp = [...chain, data];
+        await writeFile(filePath, JSON.stringify(temp));
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            await appendFile(filePath, `${data}`);
+        } else {
             throw new Error(error);
         }
     }
+}
 
-    readFromFile() {
-        console.log('READING FROM FILE!');
-        try {
-            if (fs.existsSync(this.filePath)) {
-                return JSON.parse(fs.readFileSync(this.filePath, 'utf-8'));
-            } else {
-                return null;
-            }
-        } catch (error) {
-            throw new Error(error);
-        }
-
+export const readFromFile = async (folderName, fileName) => {
+    const filePath = path.join(__appdir, folderName, fileName);
+    try {
+        const chainData = await readFile(filePath, 'utf-8');
+        return JSON.parse(chainData);
+    } catch (error) {
+        throw new Error(error);
     }
 }

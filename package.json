@@ -4,14 +4,14 @@
   "description": "A Blockchain school project",
   "main": "server.mjs",
   "scripts": {
-    "node-1": "nodemon --env-file=config/config.env server.mjs 5001 http://localhost:5001",
-    "node-2": "nodemon --env-file=config/config.env server.mjs 5002 http://localhost:5002",
-    "start": "node --env-file=config/config.env server.mjs 5001 http://localhost:5001"
+    "start": "node --env-file=config/config.env server.mjs 5005 http://localhost:5005",
+    "dev": "nodemon --env-file=config/config.env server.mjs 5005 http://localhost:5005",
+    "node-1": "nodemon --env-file=config/config.env server.mjs 5005 http://localhost:5005",
+    "node-2": "nodemon --env-file=config/config.env server.mjs 5006 http://localhost:5006"
   },
   "author": "Matteus Grodzki",
   "license": "",
   "dependencies": {
-    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "uuid": "^9.0.1"
