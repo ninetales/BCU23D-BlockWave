@@ -4,8 +4,8 @@ import { getBlockchain, createBlock, getBlockByIndex, synchronizeChain } from '.
 const router = express.Router();
 
 router.route('/').get(getBlockchain);
-router.route('/:index').get(getBlockByIndex);
 router.route('/mine').post(createBlock);
 router.route('/concensus').get(synchronizeChain);
+router.route('/:index').get(getBlockByIndex);
 
 export default router;

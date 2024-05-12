@@ -21,25 +21,37 @@ export default class Blockchain {
         return block;
     }
 
-    hashBlock(timestamp, prevBlockHash, currentBlockData, nonce) {
-        const stringToHash = timestamp.toString() + prevBlockHash + JSON.stringify(currentBlockData) + nonce;
+    hashBlock(timestamp, prevBlockHash, currentBlockData, nonce, difficulty) {
+        const stringToHash = timestamp.toString() + prevBlockHash + JSON.stringify(currentBlockData) + nonce + difficulty;
         const hash = createHash(stringToHash);
         return hash;
     }
 
-    proofOfWork(timestamp, prevBlockHash, data) {
-        const DIFFICULTY_LVL = process.env.DIFFICULTY;
+    proofOfWork(lastBlock, prevBlockHash, data) {
+        let difficulty, hash, timestamp;
         let nonce = 0;
-        let hash = this.hashBlock(timestamp, prevBlockHash, data, nonce);
-        let currentTime;
 
-        while (hash.substring(0, DIFFICULTY_LVL) !== '0'.repeat(DIFFICULTY_LVL)) {
+        do {
             nonce++;
-            currentTime = Date.now();
-            hash = this.hashBlock(currentTime, prevBlockHash, data, nonce);
-        }
+            timestamp = Date.now();
+            difficulty = this.difficultyAdjustment(lastBlock);
+            hash = this.hashBlock(
+                timestamp,
+                prevBlockHash,
+                data,
+                nonce,
+                difficulty
+            );
 
-        return nonce;
+        } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
+
+        return { nonce, difficulty, timestamp };
+    }
+
+    difficultyAdjustment(lastBlock) {
+        const MINE_RATE = process.env.MINE_RATE;
+        let { difficulty, timestamp } = lastBlock;
+        return timestamp + MINE_RATE > timestamp ? +difficulty + 1 : +difficulty - 1;
     }
 
     validateChain(blockchain) {

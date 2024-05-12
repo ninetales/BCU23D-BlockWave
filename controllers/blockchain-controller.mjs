@@ -40,10 +40,9 @@ export const createBlock = async (req, res, next) => {
         const chain = await readFromFile(folder, file);
         const lastBlock = chain.at(-1);
         const data = req.body;
-        const timestamp = Date.now();
 
-        const nonce = blockchain.proofOfWork(
-            timestamp,
+        const { nonce, difficulty, timestamp } = blockchain.proofOfWork(
+            lastBlock,
             lastBlock.currentBlockHash,
             data
         );
@@ -52,7 +51,8 @@ export const createBlock = async (req, res, next) => {
             timestamp,
             lastBlock.currentBlockHash,
             data,
-            nonce
+            nonce,
+            difficulty
         );
 
         const block = blockchain.createBlock(
@@ -60,7 +60,8 @@ export const createBlock = async (req, res, next) => {
             timestamp,
             lastBlock.currentBlockHash,
             currentBlockHash,
-            data
+            data,
+            difficulty
         )
 
         await writeToFile(folder, file, block);
@@ -103,8 +104,9 @@ export const synchronizeChain = async (reg, res, next) => {
                 }
 
                 if (!longestChain && (longestChain && !blockchain.validateChain(longestChain))) {
-                    console.log('SYNKADE!');
+                    console.log('In sync...');
                 } else {
+                    console.log('Rewrite blockchain file...');
                     reWriteFile(folder, file, longestChain);
                 }
 
