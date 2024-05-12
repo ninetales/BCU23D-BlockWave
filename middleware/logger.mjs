@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-// import { __appdir } from '../global.mjs';
 
 const logger = (req, res, next) => {
 

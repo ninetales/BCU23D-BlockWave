@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { writeFile, readFile, appendFile } from 'fs/promises';
 import path from 'path';
 
