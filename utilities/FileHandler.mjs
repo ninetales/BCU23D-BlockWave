@@ -18,6 +18,15 @@ export const writeToFile = async (folderName, fileName, data) => {
     }
 }
 
+export const reWriteFile = async (folderName, fileName, data) => {
+    const filePath = path.join(__appdir, folderName, fileName);
+    try {
+        await writeFile(filePath, JSON.stringify(data));
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 export const readFromFile = async (folderName, fileName) => {
     const filePath = path.join(__appdir, folderName, fileName);
     try {

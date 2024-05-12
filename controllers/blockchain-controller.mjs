@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { blockchain } from "../startup.mjs";
 import ResponseModel from "../utilities/ResponseModel.mjs";
-import { readFromFile, writeToFile } from "../utilities/fileHandler.mjs";
+import { reWriteFile, readFromFile, writeToFile } from "../utilities/fileHandler.mjs";
 import ErrorRespModel from '../utilities/ErrorResponseModel.mjs';
 
 const folder = 'data';
@@ -85,8 +85,33 @@ export const getBlockByIndex = async (req, res, next) => {
     }
 }
 
-export const synchronizeChain = (reg, res, next) => {
+export const synchronizeChain = async (reg, res, next) => {
     try {
+        const chainData = await readFromFile(folder, file);
+        const currentLength = chainData.length;
+        let maxLength = currentLength;
+        let longestChain = null;
+
+        blockchain.memberNodes.forEach(async (member) => {
+            const response = await fetch(`${member}/api/v1/blockchain`);
+            if (response.ok) {
+                const result = await response.json();
+
+                if (result.data.length > maxLength) {
+                    maxLength = result.data.length;
+                    longestChain = result.data;
+                }
+
+                if (!longestChain && (longestChain && !blockchain.validateChain(longestChain))) {
+                    console.log('SYNKADE!');
+                } else {
+                    reWriteFile(folder, file, longestChain);
+                }
+
+            }
+
+        });
+
         res.status(200).json(new ResponseModel({
             success: true,
             statusCode: 200,

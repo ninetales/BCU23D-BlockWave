@@ -42,4 +42,20 @@ export default class Blockchain {
         return nonce;
     }
 
+    validateChain(blockchain) {
+        let isValid = true;
+
+        for (let i = 1; i < blockchain.length; i++) {
+            const block = blockchain[i];
+            const prevBlock = blockchain[i - 1];
+
+            const hash = this.hashBlock(block.timestamp, prevBlock.currentBlockHash, block.data);
+
+            if (hash !== block.currentBlockHash) isValid = false;
+            if (block.prevBlockHash !== prevBlock.currentBlockHash) isValid = false;
+        }
+
+        return isValid;
+    }
+
 }
