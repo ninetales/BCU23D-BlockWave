@@ -8,13 +8,14 @@ export default class Blockchain {
         this.nodeUrl = process.argv[3];
     }
 
-    createBlock(chain, timestamp, prevBlockHash, currentBlockHash, data, difficulty) {
+    createBlock(chain, timestamp, prevBlockHash, currentBlockHash, data, nonce, difficulty) {
         const block = new Block(
             timestamp,
             chain.length + 1,
             prevBlockHash,
             currentBlockHash,
             data,
+            nonce,
             difficulty
         );
 

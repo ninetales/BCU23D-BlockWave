@@ -13,7 +13,7 @@ const filePath = path.join(__appdir, folder, file);
 // Create GENESIS BLOCK and a new BLOCKCHAIN FILE upon initiation
 // ==================================================================
 if (!fs.existsSync(filePath)) {
-    const genesisBlock = blockchain.createBlock([], Date.now(), '0', '0', []);
+    const genesisBlock = blockchain.createBlock([], Date.now(), '0', '0', [], 1337, 2);
     try {
         await writeToFile(folder, file, JSON.stringify([genesisBlock]));
     } catch (error) {
