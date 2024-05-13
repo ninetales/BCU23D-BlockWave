@@ -40,16 +40,16 @@ http://localhost:3001/api/v1/blockchain/**replace this**
 
 **List members**
 ```
-http://localhost:3002/api/v1/members
+http://localhost:3001/api/v1/members
 ```
 
 **Register a member**
 ```
-http://localhost:3002/api/v1/members/register
+http://localhost:3001/api/v1/members/register
 ```
 
 **Try the concensus method**
 ```
-http://localhost:3002/api/v1/blockchain/concensus
+http://localhost:3001/api/v1/blockchain/concensus
 ```
 
